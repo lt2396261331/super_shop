@@ -13,6 +13,10 @@
       <detail-commen-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommend" :goods="recommends"/>
     </scroll>
+    <detail-bottom-bar @addCart="addtoCart"/>
+
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
+<!--    <toast :message="message" :show="show"/>-->
   </div>
 </template>
 
@@ -24,14 +28,17 @@
   import DetailGoodsInfo from "./ChildComps/DetailGoodsInfo";
   import DetailParamInfo from "./ChildComps/DetailParamInfo";
   import DetailCommenInfo from "./ChildComps/DetailCommenInfo";
+  import DetailBottomBar from "./ChildComps/DetailBottomBar";
 
 
   import GoodsList from "components/content/goods/GoodsList";
   import Scroll from "../../components/common/scroll/Scroll";
+  // import Toast from "components/common/toast/Toast";
 
   import {getDetail, Goods, Shop, GoodsParam, getReccommend} from "network/datail";
+  import {itemListenerMixin, backTopMixin} from "common/minxin";
 
-  import {itemListenerMixin} from "common/minxin";
+  import { mapActions } from 'vuex'
 
   export default {
     name: "Detail",
@@ -43,11 +50,14 @@
       DetailGoodsInfo,
       DetailParamInfo,
       DetailCommenInfo,
+      DetailBottomBar,
 
       Scroll,
       GoodsList,
+
+      // Toast
     },
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     data() {
       return {
         iid: null,
@@ -59,7 +69,10 @@
         commentInfo: {},
         recommends: [],
         themeTopYs: [],
-        currentIndex: 0
+        currentIndex: 0,
+
+        // message: '',
+        // show: false
       }
     },
     created() {
@@ -130,17 +143,18 @@
 
     },
     methods: {
+      ...mapActions(['addCart']),
       imageLoad() {
         this.$refs.scroll.refresh()
-
 
         this.themeTopYs = []
         this.themeTopYs.push(0);
         this.themeTopYs.push(this.$refs.params.$el.offsetTop -44)
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop -44)
         this.themeTopYs.push(this.$refs.recommend.$el.offsetTop -44)
+        this.themeTopYs.push(Number.MAX_VALUE)
 
-        console.log(this.themeTopYs);
+        // console.log(this.themeTopYs);
 
       },
       titleClick(index) {
@@ -152,21 +166,65 @@
 
         // 2.positionY和主题值对比
         // 0, 12729, 13708, 13906,
+        // console.log(Number.MAX_VALUE);
+
+
         // positionY 再0-12329之间 index=0 以此类推
         let length = this.themeTopYs.length
-        for(let i = 0; i < length;i ++) {
+        for(let i = 0; i < length-1;i ++) {
           // console.log(i); // str类型
 
           // if(positionY > this.themeTopYs[i]
           //   && positionY < this.themeTopYs[i+1]) {
           //   console.log(i)
           // }
-          if (this.currentIndex !== i && ((i < length - 1 && positionY >= this.themeTopYs[i]
-            && positionY < this.themeTopYs[i+1]) || (i === length -1 && positionY >= this.themeTopYs[i]))) {
-            this.currentIndex = i
-            this.$refs.nav.currentIndex = this.currentIndex
+
+          if (this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])) {
+              this.currentIndex = i
+              this.$refs.nav.currentIndex = this.currentIndex
           }
+
+          // if (this.currentIndex !== i && ((i < length - 1 && positionY >= this.themeTopYs[i]
+          //   && positionY < this.themeTopYs[i+1]) || (i === length -1 && positionY >= this.themeTopYs[i]))) {
+          //   this.currentIndex = i
+          //   this.$refs.nav.currentIndex = this.currentIndex
+          // }
+
+          // 3.判断是否需要显示回到顶部按钮
+          this.listenShowBackTop(position)
         }
+      },
+      addtoCart() {
+        // 1.获取购物车需要展示的信息
+        const product = {}
+        product.image = this.topImages[0]
+        product.title = this.goods.title
+        product.desc = this.goods.desc
+        product.price = this.goods.realPrice
+        product.iid = this.iid
+
+        // 2.将商品添加到购物车(1.Promise,mapActions)
+        // this.$store.commit('addCart', product)
+        this.addCart(product).then(res => {
+          // this.show = true
+          // this.message = res
+          //
+          // setTimeout(() => {
+          //   this.show = false
+          //   this.message = ''
+          // },1500)
+          //
+          // console.log(res);
+
+          this.$toast.show(res, 1500)
+
+          console.log(this.$toast);
+        })
+
+        // this.$store.dispatch('addCart', product).then(res => {
+        //   console.log(res)
+        // })
+
       }
     },
     destroyed() {
@@ -184,7 +242,7 @@
   }
 
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 49px);
   }
 
   .detail-nav {
