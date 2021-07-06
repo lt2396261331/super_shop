@@ -1,128 +1,109 @@
 <template>
-  <div>
-    <scroll class="content">
-      <ul>
-        <li>'个人信息'1</li>
-        <li>'个人信息'2</li>
-        <li>'个人信息'3</li>
-        <li>'个人信息'4</li>
-        <li>'个人信息'5</li>
-        <li>'个人信息'6</li>
-        <li>'个人信息'7</li>
-        <li>'个人信息'8</li>
-        <li>'个人信息'9</li>
-        <li>'个人信息'10</li>
-        <li>'个人信息'11</li>
-        <li>'个人信息'12</li>
-        <li>'个人信息'13</li>
-        <li>'个人信息'14</li>
-        <li>'个人信息'15</li>
-        <li>'个人信息'16</li>
-        <li>'个人信息'17</li>
-        <li>'个人信息'18</li>
-        <li>'个人信息'19</li>
-        <li>'个人信息'20</li>
-        <li>'个人信息'21</li>
-        <li>'个人信息'22</li>
-        <li>'个人信息'23</li>
-        <li>'个人信息'24</li>
-        <li>'个人信息'25</li>
-        <li>'个人信息'26</li>
-        <li>'个人信息'27</li>
-        <li>'个人信息'28</li>
-        <li>'个人信息'29</li>
-        <li>'个人信息'30</li>
-        <li>'个人信息'31</li>
-        <li>'个人信息'32</li>
-        <li>'个人信息'33</li>
-        <li>'个人信息'34</li>
-        <li>'个人信息'35</li>
-        <li>'个人信息'36</li>
-        <li>'个人信息'37</li>
-        <li>'个人信息'38</li>
-        <li>'个人信息'39</li>
-        <li>'个人信息'40</li>
-        <li>'个人信息'41</li>
-        <li>'个人信息'42</li>
-        <li>'个人信息'43</li>
-        <li>'个人信息'44</li>
-        <li>'个人信息'45</li>
-        <li>'个人信息'46</li>
-        <li>'个人信息'47</li>
-        <li>'个人信息'48</li>
-        <li>'个人信息'49</li>
-        <li>'个人信息'50</li>
-        <li>'个人信息'51</li>
-        <li>'个人信息'52</li>
-        <li>'个人信息'53</li>
-        <li>'个人信息'54</li>
-        <li>'个人信息'55</li>
-        <li>'个人信息'56</li>
-        <li>'个人信息'57</li>
-        <li>'个人信息'58</li>
-        <li>'个人信息'59</li>
-        <li>'个人信息'60</li>
-        <li>'个人信息'61</li>
-        <li>'个人信息'62</li>
-        <li>'个人信息'63</li>
-        <li>'个人信息'64</li>
-        <li>'个人信息'65</li>
-        <li>'个人信息'66</li>
-        <li>'个人信息'67</li>
-        <li>'个人信息'68</li>
-        <li>'个人信息'69</li>
-        <li>'个人信息'70</li>
-        <li>'个人信息'71</li>
-        <li>'个人信息'72</li>
-        <li>'个人信息'73</li>
-        <li>'个人信息'74</li>
-        <li>'个人信息'75</li>
-        <li>'个人信息'76</li>
-        <li>'个人信息'77</li>
-        <li>'个人信息'78</li>
-        <li>'个人信息'79</li>
-        <li>'个人信息'80</li>
-        <li>'个人信息'81</li>
-        <li>'个人信息'82</li>
-        <li>'个人信息'83</li>
-        <li>'个人信息'84</li>
-        <li>'个人信息'85</li>
-        <li>'个人信息'86</li>
-        <li>'个人信息'87</li>
-        <li>'个人信息'88</li>
-        <li>'个人信息'89</li>
-        <li>'个人信息'90</li>
-        <li>'个人信息'91</li>
-        <li>'个人信息'92</li>
-        <li>'个人信息'93</li>
-        <li>'个人信息'94</li>
-        <li>'个人信息'95</li>
-        <li>'个人信息'96</li>
-        <li>'个人信息'97</li>
-        <li>'个人信息'98</li>
-        <li>'个人信息'99</li>
-        <li>'个人信息'100</li>
-      </ul>
-    </scroll>
+  <div id="profile">
+    <nav-bar class="nav-bar"><div slot="center">小码哥商城</div></nav-bar>
+    <!--1.单独封装一个组件: 利用slot知识点-->
+    <UserInfo></UserInfo>
+
+    <!--2.没有单独封装: 不同的地方太多, 需要传过多的参数-->
+    <section class="account">
+      <div class="account-item">
+        <div class="number">
+          <span class="balance">0.00</span>元
+        </div>
+        <div class="account-info">我的余额</div>
+      </div>
+      <div class="account-item">
+        <div class="number">
+          <span class="balance">0</span>个
+        </div>
+        <div class="account-info">我的优惠</div>
+      </div>
+      <div class="account-item">
+        <div class="number">
+          <span class="balance">0</span>分
+        </div>
+        <div class="account-info">我的积分</div>
+      </div>
+    </section>
+
+    <!--3.封装成一个整体-->
+    <list-view :list-data="orderList" class="order-list"></list-view>
+    <list-view :list-data="serviceList" class="service-list"></list-view>
   </div>
 </template>
 
 <script>
-  import Scroll from "../../components/common/scroll/Scroll";
+  import UserInfo from './childComps/UserInfo'
+  import ListView from './childComps/ListView'
+  import NavBar from 'components/common/navbar/NavBar'
 
-export default {
-  name: "Profile",
-  components: {
-    Scroll,
-  }
-}
+	export default {
+		name: "Profile",
+    components: {
+		  UserInfo, ListView, NavBar
+    },
+    data: function () {
+		  return {
+		    orderList: [
+          {icon: '#order', iconColor: '#ff8198', info: '我的消息'},
+          {icon: '#point', iconColor: '#fc7b53', info: '积分商城'},
+          {icon: '#vip', iconColor: '#ffc636', info: '会员卡'},
+        ],
+        serviceList: [
+          {icon: '#service', iconColor: '#ff8198', info: '我的购物车'},
+          {icon: '#download', iconColor: '#ff8198', info: '下载购物APP'},
+        ]
+      }
+    },
+    mounted: function () {
+    }
+	}
 </script>
 
 <style scoped>
-  .content {
-    height: 300px;
-    background-color: red;
-
-    overflow: hidden;
+  #profile {
+    background-color: #f2f2f2;
   }
+
+  .nav-bar {
+    background-color: var(--color-tint);
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .account {
+    display: flex;
+  }
+
+  .account-item {
+    width: 100%;
+    background-color: #fff;
+    margin-right: 1px;
+    text-align: center;
+  }
+
+  .account-item:last-of-type {
+    margin-right: 0;
+  }
+
+  .account-item {
+    color: #666;
+    font-size: 13px;
+    padding: 18px;
+  }
+
+  .account-item .balance {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ff5f3e;
+  }
+
+  .account-info {
+    margin-top: 6px;
+  }
+
+  .order-list, .service-list {
+    margin-top: 12px;
+  }
+
 </style>

@@ -15,7 +15,6 @@ export default {
         payload.count = 1
         context.commit('addToCart', payload)
         resolve('添加了新的商品')
-
       }
     })
   }
